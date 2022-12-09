@@ -22,7 +22,7 @@ Database
 3. 서비스오픈 1:45분 경과 - SI업체 DBA가 실제 운영 Database를 개발 DB로 착각, 운영 중인 전체 DB를 Drop Database 명령 실행 
 4. 서비스오픈 2:00분 경과 - 총괄 DBA에게 장애접수   
 5. 서비스오픈 2:00분 경과 - 정보시스템 장애발생
-6. 서비스오픈 2:15분 경과 - Storage Snapshot 장애상황복제 되어 사용불가, Standby DB 복구결정 및 복구시작
+6. 서비스오픈 2:15분 경과 - Storage Snapshot 장애상황 복제 되어 사용불가, Standby DB 복구결정 및 복구시작
 7. 서비스오픈 2:45분 경과 - Standby Database Primary DB로 Open
 8. 서비스오픈 3:00분 경과 - 정보시스템 정상오픈 
 
@@ -32,8 +32,7 @@ Database
 |Standby Apply 간격|     3시간     |  5시간    |
 |DB Security      | Case by Case|  All    |
 
-  + Storage Snashop 실행간격 1:00로 장애 전파 되어 사용불가 -> 실행간격 2시간으로 설정 
-  + Standby Database 실행간격 3:00 -> 5시간으로 설정
+ + 역활 : 총괄 DBA, PM 업무 수행
   
  
 
