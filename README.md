@@ -17,4 +17,19 @@ Database
 
 ## BackUp and Recovery 백업 및 복원 - 실제로 발생 되었던 상황
 
+1. 프로젝트 마지막 단계 서비스 오픈 
+2. 서비스오픈 1:30분 경과 
+3. 서비스오픈 1:45분 경과 - SI업체 DBA가 실제 운영 Database를 개발 DB로 착각, 운영 중인 전체 DB를 Drop Database 명령 실행 
+4. 서비스오픈 2:00분 경과 - 총괄 DBA에게 장애접수   
+5. 서비스오픈 2:00분 경과 - 정보시스템 장애발생
+6. 서비스오픈 2:15분 경과 - Storage Snapshot 장애상황복제 되어 사용불가, Standby DB 복구결정 및 복구시작
+7. 서비스오픈 2:45분 경과 - Standby Database Primary DB로 Open
+8. 서비스오픈 3:00분 경과 - 정보시스템 정상오픈 
 
++ Summary
++  + Storage Snashop 실행간격 1:00로 장애 전파 되어 사용불가 -> 실행간격 2시간으로 설정 
++  + Standby Database 실행간격 3:00 -> 5시간으로 설정
++  
+ 
+
+![swim-real](https://user-images.githubusercontent.com/117779419/206681473-03b6a53c-cd2b-4f88-98f6-0bc064122145.PNG)
