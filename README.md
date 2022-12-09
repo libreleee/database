@@ -26,9 +26,11 @@ Database
 7. 서비스오픈 2:45분 경과 - Standby Database Primary DB로 Open
 8. 서비스오픈 3:00분 경과 - 정보시스템 정상오픈 
 
-| AS-IS | TO-BE|
-|+++++++|++++++|
-|       |      |
+| 항목 | 변경전|변경후  |
+|-------|-------|------|
+|Storage Snapshot 간격 | 1시간    |   3시간   |
+|Standby Apply 간격|     3시간     |  5시간    |
+|DB Security      | Case by Case|  All    |
 
   + Storage Snashop 실행간격 1:00로 장애 전파 되어 사용불가 -> 실행간격 2시간으로 설정 
   + Standby Database 실행간격 3:00 -> 5시간으로 설정
