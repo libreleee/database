@@ -44,6 +44,14 @@ select database_role, db_unique_name INSTANCE, open_mode, protection_mode, prote
 FROM v$database;  
 ```
 
+Last log Applied On Standby Info Query
+```
+select thread#, Max(sequence#) 
+FROM v$archived_log
+WHERE  applied = ‘YES’
+GROUP  BY thread#;   
+```
+
 ## High Availability Compare
 | 항목 | Oracle|MySQL  |
 |-------|-------|------|
