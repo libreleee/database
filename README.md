@@ -38,6 +38,7 @@ Database
 
 ![swim-real](https://user-images.githubusercontent.com/117779419/206687895-000af29e-03da-4f9b-be7c-d5916c7d5b83.PNG)
 
+Standby Database info Query
 ```
 select database_role, db_unique_name INSTANCE, open_mode, protection_mode, protection_level, switchover_status
 FROM v$database;  
