@@ -56,6 +56,6 @@ GROUP  BY thread#;
 | 항목 | Oracle|MySQL  |
 |-------|-------|------|
 | HA      |Data Guard       | Replication      |
-| Switch Over Connection       |TAF(RAC)     | Maxcale or ProxySQL    |
+| Switch Over Connection       |TAF(RAC)     | MaxScale or ProxySQL    |
 
 
