@@ -53,9 +53,10 @@ GROUP  BY thread#;
 ```
 
 ## High Availability Compare
-| 항목 | Oracle|MySQL  |
+| 항목 | Oracle|MySQL MariaDB |
 |-------|-------|------|
-| HA      |Data Guard       | Replication      |
-| Switch Over Connection       |TAF(RAC)     | MaxScale or ProxySQL    |
+| HA      |Data Guard       | Replication MHA,MMM,galera cluster   ![image](https://github.com/libreleee/database/assets/117779419/15f2a68e-0deb-4f72-981b-132255a9e9b5)
+||||
+| Switch Over Connection       |TAF(RAC)     | MaxScale or ProxyS   |
 
 
