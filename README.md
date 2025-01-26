@@ -59,4 +59,51 @@ GROUP  BY thread#;
 ||||
 | Switch Over Connection       |TAF(RAC)     | MaxScale or ProxyS   |
 
+## mysql galera cluster, use percona-xtradb-cluster 8.0
+참고 사이트 https://docs.percona.com/percona-xtradb-cluster/8.0/quickstart-overview.html
 
+* Docker를 이용한 테스트
+1. Create a pxc-docker-test/config directory. 작업할 디렉토리를 만든다
+   mkdir pxc-docker-test
+   cd pxc-doecker-test
+   mkdir config
+   
+3. Create a custom.cnf file . mysql configuration파일 만든다 <br>
+    
+<pre><code>
+cd config 
+vi custom.cnf 
+ 
+[mysqld]
+ssl-ca = /cert/ca.pem
+ssl-cert = /cert/server-cert.pem
+ssl-key = /cert/server-key.pem
+
+[client]
+ssl-ca = /cert/ca.pem
+ssl-cert = /cert/client-cert.pem
+ssl-key = /cert/client-key.pem
+
+[sst]
+encrypt = 4
+ssl-ca = /cert/ca.pem
+ssl-cert = /cert/server-cert.pem
+ssl-key = /cert/server-key.pem
+</code> 
+</pre>
+
+4.Create a cert directory and generate self-signed SSL certificates on the host node 인증 관련 Directory 생성과 인증관련 파일 생성
+<pre><code>
+cd  ..   -> pxc-docker-test
+mkdir -m 777 -p cert
+docker run --name pxc-cert --rm -v ./cert:/cert
+percona/percona-xtradb-cluster:8.0 mysql_ssl_rsa_setup -d /cert
+</code>
+</pre>
+
+5.Create a Docker network
+<pre>
+ <code>
+docker network create pxc-network
+ </code>
+</pre>
