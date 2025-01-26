@@ -62,13 +62,18 @@ GROUP  BY thread#;
 ## mysql galera cluster, use percona-xtradb-cluster 8.0
 참고 사이트 https://docs.percona.com/percona-xtradb-cluster/8.0/quickstart-overview.html
 
-* Docker를 이용한 테스트
-1. Create a pxc-docker-test/config directory. 작업할 디렉토리를 만든다
+* Docker를 이용한 테스트<br>
+
+**1. Create a pxc-docker-test/config directory. 작업할 디렉토리를 만든다**
+<pre>
+<code>
    mkdir pxc-docker-test
    cd pxc-doecker-test
    mkdir config
-   
-3. Create a custom.cnf file . mysql configuration파일 만든다 <br>
+</code>
+</pre>
+
+**2. Create a custom.cnf file . mysql configuration파일 만든다** <br>
     
 <pre><code>
 cd config 
@@ -92,7 +97,7 @@ ssl-key = /cert/server-key.pem
 </code> 
 </pre>
 
-4.Create a cert directory and generate self-signed SSL certificates on the host node 인증 관련 Directory 생성과 인증관련 파일 생성
+**3. Create a cert directory and generate self-signed SSL certificates on the host node 인증 관련 Directory 생성과 인증관련 파일 생성**
 <pre><code>
 cd  ..   -> pxc-docker-test
 mkdir -m 777 -p cert
@@ -101,9 +106,139 @@ percona/percona-xtradb-cluster:8.0 mysql_ssl_rsa_setup -d /cert
 </code>
 </pre>
 
-5.Create a Docker network
+현재 dir tree
+
+
+**4. Create a Docker network**
 <pre>
  <code>
 docker network create pxc-network
  </code>
+</pre>
+
+현재 dir tree
+<pre>
+<code>
+ pxc-docker-test
+    ├── cert
+    │   ├── ca-key.pem
+    │   ├── ca.pem
+    │   ├── client-cert.pem
+    │   ├── client-key.pem
+    │   ├── private_key.pem
+    │   ├── public_key.pem
+    │   ├── server-cert.pem
+    │   └── server-key.pem
+    └── config
+        └── custom.cnf 
+</code>
+</pre>
+**5. Bootstrap the cluster (create the first node) 클러스터 부트스트랩, node1** <br>
+pxc-docker-test$  실행위치
+<pre>
+<code>
+
+docker run -d \
+-e MYSQL_ROOT_PASSWORD=test1234# \
+-e CLUSTER_NAME=pxc-cluster1 \
+--name=pxc-node1 \
+--net=pxc-network \
+-v ./cert:/cert \
+-v ./config:/etc/percona-xtradb-cluster.conf.d \
+percona/percona-xtradb-cluster:8.0     
+</code></pre>
+
+**6. Join the second node, 2 번쩨 노드 join**
+<pre>
+<code>
+docker run -d \
+-e MYSQL_ROOT_PASSWORD=test1234# \
+-e CLUSTER_NAME=pxc-cluster1 \
+-e CLUSTER_JOIN=pxc-node1 \
+--name=pxc-node2 \
+--net=pxc-network \
+-v ./cert:/cert \
+-v ./config:/etc/percona-xtradb-cluster.conf.d \
+percona/percona-xtradb-cluster:8.0
+</code>
+</pre>
+
+**7. Join the third node, 3 번째 노드 join**
+<pre>
+<code>
+docker run -d \
+-e MYSQL_ROOT_PASSWORD=test1234# \
+-e CLUSTER_NAME=pxc-cluster1 \
+-e CLUSTER_JOIN=pxc-node1 \
+--name=pxc-node3 \
+--net=pxc-network \
+-v ./cert:/cert \
+-v ./config:/etc/percona-xtradb-cluster.conf.d \
+percona/percona-xtradb-cluster:8.0
+</code>
+</pre>
+
+**8. Check Cluster, Access the MySQL client. For example, on the first node, 클러스터 확인, node1**
+<pre>
+<code>
+sudo docker exec -it pxc-node1 mysql -uroot -ptest1234#
+
+mysql> show status like 'wsrep_cluster_size%';
++--------------------+-------+
+| Variable_name      | Value |
++--------------------+-------+
+| wsrep_cluster_size | 3     |
++--------------------+-------+
+1 row in set (0.03 sec)
+</code>
+</pre>
+!!! 여기에서 값이 1이면 클러스터 설정이 제대로 안된상태
+
+**9. Verify replication, 클러스터 replication 확인**<br>
+ 1) Create a new database on the second node, node2 에서 create database
+<pre>
+<code>
+mysql> CREATE DATABASE percona;
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| percona            |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.07 sec)
+
+mysql> use percona;
+Database changed
+</code>
+</pre>
+
+ 2) Create a table on the third node, Create 테이블은 node3
+<pre>
+<code>
+mysql> CREATE TABLE example (node_id INT PRIMARY KEY, node_name VARCHAR(30));
+</code>
+</pre>
+
+ 3) Insert records on the first node, Insert 데이터는 node1
+<pre>
+<code>
+mysql> INSERT INTO percona.example VALUES (1, 'percona1');
+</code>
+</pre>
+
+ 4) Retrieve rows from that table on the second node, 조회는 node2
+<pre>
+<code>
+mysql> SELECT * FROM percona.example;
++---------+-----------+
+| node_id | node_name |
++---------+-----------+
+|       1 | percona1  |
++---------+-----------+
+1 row in set (0.00 sec)
+</code>
 </pre>
