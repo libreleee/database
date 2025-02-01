@@ -55,7 +55,7 @@ GROUP  BY thread#;
 ## High Availability Compare (mysql 고가용성 솔루션)
 | 항목 | Oracle|MySQL MariaDB | MySQL | MariaDB |
 |-------|-------|------|------|------|
-| HA      |**RAC**<BR>Data Guard<BR>Site Guard<BR>  **"비용 생각하지 않으면" HP Superdome, RAC는 최고의 조합**      | Replication MHA,MMM,galera cluster   ![image](https://github.com/libreleee/database/assets/117779419/15f2a68e-0deb-4f72-981b-132255a9e9b5) | **cluster-ndb**  Rocky9.5,mysql-8.0.41 ndb-8.0.41  | https://mariadb.com/kb/en/ndb-in-mariadb/ NDB(MySQL 클러스터)는 MariaDB 10.0 까지 기본적으로 비활성화되었으며 , MariaDB 10.1 에서 완전히 제거되었습니다.<br>적극적으로 개발되고 있는 대안에 대해서는 Galera Cluster를 참조하세요.<br> 아쉽지만 cluster ndb는 mysql을 당분간 사용<br> **성능과 확장성 측면에서는 NDB가 우세인 상황, 관리즉면은 조금 부담** |
+| HA      |**RAC**<BR>Data Guard<BR>Site Guard<BR>  **"비용 생각하지 않으면" HP Superdome + RAC + Data Guard 는 최고의 조합, 실제 업무에서 증명됨(MES)**      | Replication MHA,MMM,galera cluster   ![image](https://github.com/libreleee/database/assets/117779419/15f2a68e-0deb-4f72-981b-132255a9e9b5) | **cluster-ndb**  Rocky9.5,mysql-8.0.41 ndb-8.0.41  | https://mariadb.com/kb/en/ndb-in-mariadb/ NDB(MySQL 클러스터)는 MariaDB 10.0 까지 기본적으로 비활성화되었으며 , MariaDB 10.1 에서 완전히 제거되었습니다.<br>적극적으로 개발되고 있는 대안에 대해서는 Galera Cluster를 참조하세요.<br> 아쉽지만 cluster ndb는 mysql을 당분간 사용<br> **성능과 확장성 측면에서는 NDB가 우세인 상황, 관리즉면은 조금 부담** |
 ||||
 | Switch Over Connection       |TAF(RAC)     | MaxScale or ProxySQL,    | ndb LoadBalancer |
 
